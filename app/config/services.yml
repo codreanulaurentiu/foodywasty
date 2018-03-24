@@ -4,6 +4,10 @@ parameters:
     #parameter_name: value
 
 services:
+    stock.management.service:
+        class: AppBundle\Service\StockManagementService
+        public: true
+
     app.form_login_authenticator:
         class: AppBundle\Security\FormLoginAuthenticator
         arguments: ["@router", "@security.password_encoder"]
