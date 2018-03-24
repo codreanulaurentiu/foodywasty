@@ -8,6 +8,17 @@ services:
         class: AppBundle\Service\StockManagementService
         public: true
 
+    categories.service:
+        class: AppBundle\Service\CategoriesService
+        public: true
+
+    mailer.service:
+        public: true
+        class: AppBundle\Service\MailService
+        calls:
+        - [setContainer, ["@service_container"]]
+        - [setFrom, ["%from%"]]
+        - [setAuthKey, ["%auth_key%"]]
     app.form_login_authenticator:
         class: AppBundle\Security\FormLoginAuthenticator
         arguments: ["@router", "@security.password_encoder"]

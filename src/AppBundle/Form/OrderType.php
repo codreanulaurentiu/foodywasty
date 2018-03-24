@@ -3,7 +3,9 @@
 namespace AppBundle\Form;
 
 
+use AppBundle\Entity\Category;
 use AppBundle\Entity\Order;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -27,7 +29,12 @@ class OrderType extends AbstractType
                     ]
                 ]
             )
-            ->add('pickUpDate', DateType::class);
+            ->add('pickUpDate', DateType::class)
+            ->add('category', EntityType::class,
+                [
+                    'class' => Category::class,
+                    'choice_label' => 'name'
+                ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

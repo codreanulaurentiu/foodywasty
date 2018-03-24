@@ -13,13 +13,17 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Order
  * @package AppBundle\Entity
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\OrderRepository")
  * @ORM\Table(
  *     name="orders"
  * )
  */
 class Order
 {
+
+    const STATUS_NEW = 1;
+    const STATUS_RECEIVED = 2;
+
     const TYPE_ADD_FOOD = 1;
     const TYPE_REQUEST_FOOD = 2;
     const TYPE_ADD_WASTE = 3;
@@ -59,6 +63,17 @@ class Order
      * @ORM\Column(type="date")
      */
     private $pickUpDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category")
+     */
+    private $category;
+
+    /**
+     * @var Stock
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Stock", mappedBy="order")
+     */
+    private $stock;
 
     /**
      * @return User
@@ -122,5 +137,37 @@ class Order
     public function setPickUpDate($pickUpDate)
     {
         $this->pickUpDate = $pickUpDate;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
+    /**
+     * @return Stock
+     */
+    public function getStock(): Stock
+    {
+        return $this->stock;
+    }
+
+    /**
+     * @param mixed $stock
+     */
+    public function setStock($stock)
+    {
+        $this->stock = $stock;
     }
 }

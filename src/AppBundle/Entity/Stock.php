@@ -28,7 +28,7 @@ class Stock
 
     /**
      * @var Order
-     * @ORM\OneToOne(targetEntity="Order")
+     * @ORM\OneToOne(targetEntity="Order", inversedBy="stock")
      */
     private $order;
 

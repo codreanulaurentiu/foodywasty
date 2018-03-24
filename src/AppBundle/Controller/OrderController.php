@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Order;
 use AppBundle\Entity\User;
 use AppBundle\Form\OrderType;
+use AppBundle\Repository\OrderRepository;
+use AppBundle\Service\MailService;
 use AppBundle\Service\StockManagementService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -26,13 +28,17 @@ class OrderController extends Controller
         if (!$storage->getToken()->isAuthenticated()) {
             throw new UnauthorizedHttpException('ax');
         }
+
         /** @var User $user */
-        $user    = $storage->getToken()->getUser();
+        $user = $storage->getToken()->getUser();
+
         /** @var Order $order */
-        $order   = new Order();
+        $order = new Order();
+
         /** @var StockManagementService $service */
         $service = $this->get('stock.management.service');
-        $form       = $this->createForm(OrderType::class, $order);
+        $form    = $this->createForm(OrderType::class, $order);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $order->setUser($user);
@@ -45,6 +51,7 @@ class OrderController extends Controller
                 $service->subtractStock($order);
             }
         }
+
         return $this->render('default/addOrder.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -58,7 +65,7 @@ class OrderController extends Controller
         /** @var TokenStorage $storage */
         $storage = $this->get('security.token_storage');
         if (!$storage->getToken()->isAuthenticated()) {
-            throw new UnauthorizedHttpException('ax');
+            throw new UnauthorizedHttpException('Nu aveti permisiuni sa accesati acest url!');
         }
         $type = $request->request->get('type');
         if (!in_array($type, [Order::TYPE_REQUEST_FOOD, Order::TYPE_REQUEST_WASTE]) || empty($request->request->get('quantity'))) {
@@ -73,5 +80,57 @@ class OrderController extends Controller
         return empty($response)
             ? new JsonResponse($response)
             : new JsonResponse('Nu am gasit stock pentru datele cerute.');
+    }
+
+    /**
+     * @Route(name="get_categories", path="/list_categories")
+     */
+    public function getCategories(Request $request)
+    {
+        /** @var TokenStorage $storage */
+        $storage = $this->get('security.token_storage');
+        if (!$storage->getToken()->isAuthenticated()) {
+            throw new UnauthorizedHttpException('Nu aveti permisiuni sa accesati acest url!');
+        }
+
+        $categories = $this->get('categories.service')->getCategories();
+        return new JsonResponse($categories);
+    }
+
+    /**
+     * @Route(name="list_orders", path="/orders")
+     */
+    public function listOrders(Request $request)
+    {
+        /** @var OrderRepository $repo */
+        $repo = $this->getDoctrine()->getManager()->getRepository(Order::class);
+
+        /** @var TokenStorage $storage */
+        $storage = $this->get('security.token_storage');
+        if (!$storage->getToken()->isAuthenticated()) {
+            throw new UnauthorizedHttpException('Nu aveti permisiuni sa accesati acest url!');
+        }
+
+        /** @var User $user */
+        $user = $storage->getToken()->getUser();
+
+        return $this->render('default/orderListing.html.twig', [
+            'past_orders' => $repo->getPastOrders($user),
+            'upcoming_orders' => $repo->getUpcomingOrders($user),
+        ]);
+    }
+
+    /**
+     * @Route(name="show_order", path="/orders/{id}")
+     */
+    public function showOrder(Request $request, int $id)
+    {
+        $repo = $this->getDoctrine()->getManager()->getRepository(Order::class);
+
+        $order = $repo->find($id);
+
+        return $this->render('default/orderDetails.html.twig', [
+            'order' => $order
+        ]);
     }
 }
