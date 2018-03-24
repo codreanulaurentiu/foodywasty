@@ -43,10 +43,16 @@ class StockManagementService
 
     public function subtractStock(Order $order)
     {
-        /** @var StockRepository $repo */
-        $repo = $this->entityManager->getRepository(Stock::class);
+        if (!in_array($order->getType(), [Order::TYPE_REQUEST_FOOD, Order::TYPE_REQUEST_WASTE])) {
+            throw new \Exception('Nu am putut genera o comanda cu datele cerute.');
+        }
+        $type = $order->getType() === Order::TYPE_REQUEST_FOOD
+            ? Order::TYPE_ADD_FOOD
+            : Order::TYPE_ADD_WASTE;
 
-        $stocks = $repo->getAllAvailableStocks($order->getType());
+        /** @var StockRepository $repo */
+        $repo      = $this->entityManager->getRepository(Stock::class);
+        $stocks    = $repo->getAllAvailableStocks($type);
         $remaining = $order->getQuantity();
 
         /** @var Stock $stock */
@@ -59,7 +65,6 @@ class StockManagementService
             $currentStock = $stock->getRemainingQuantity();
             $stock->setRemainingQuantity($currentStock - min($remaining, $currentStock));
             $remaining -= min($remaining, $currentStock);
-
         }
     }
 

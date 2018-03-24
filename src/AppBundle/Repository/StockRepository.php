@@ -44,7 +44,7 @@ class StockRepository extends EntityRepository
         }
 
         if (!$found) {
-            throw new \Exception('no available');
+            throw new \Exception('Nu exista stock disponibil. Va rugam incercati cu alte date!');
         }
     }
 }
