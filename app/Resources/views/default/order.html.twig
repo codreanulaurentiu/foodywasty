@@ -6,13 +6,13 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="title">Comand&#259;<i class="fas fa-leaf order-type"></i></h1>
+            <br>
             {{ form_start(form) }}
                 {{ form_row(form.type, {'attr': {'class': 'form-control'}}) }}
                 {{ form_row(form.category, {'attr': {'class': 'form-control'}}) }}
                 {{ form_row(form.quantity, {'attr': {'class': 'form-control'}}) }}
                 {{ form_row(form.pickUpDate, {'attr': {'class': 'hidden'}}) }}
                 {{ form_row(form.address, {'attr': {'class': 'form-control'}}) }}
-                {{ form_row(form.phone, {'attr': {'class': 'form-control'}}) }}
                 <button id="check" class="btn btn-success check" disabled="true">Verific&#259; disponibilitatea</button>
                 <div id="v-cal" class="hidden">
                     <div class="vcal-header">

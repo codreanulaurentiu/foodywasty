@@ -118,4 +118,14 @@ class DefaultController extends Controller
             'default/find.html.twig'
         );
     }
+
+    /**
+     * @Route("/analytics", name="analytics")
+     */
+    public function listAnalyticsAction(Request $request)
+    {
+        return $this->render(
+            'default/analytics.html.twig'
+        );
+    }
 }

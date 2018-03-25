@@ -5,10 +5,31 @@
 {% block body %}
 <div class="container">
     <div class="container presentation">
-        <div class="row">
-            <div class="col-md-4"><i class="fas fa-utensils"></i><p id="n1">2550000</p> tone de m&#226;ncare irosita anual in Romania.</div>
-            <div class="col-md-4"><i class="fas fa-user"></i><p id="n2">132495</p> grame de m&#226;ncare irosita de o persoana anual in medie.</div>
-            <div class="col-md-4"><i class="far fa-trash-alt"></i><p id="n3">30%</p> din alimente sunt irosite.</div>
+        {#<div class="row">#}
+            {#<h2 class="landing-name">FOODLY.</h2>#}
+        {#</div>#}
+        <div class="row numbers-row">
+            <div class="col-xs-4 number-stats">
+                <div id="border"></div>
+                <p id="n1">2550000</p> tone de m&#226;ncare irosita anual in Romania.
+            </div>
+            <div class="col-xs-4 number-stats">
+                <div id="border"></div>
+                <p id="n2">132495</p> grame de m&#226;ncare irosita de o persoana anual in medie.
+            </div>
+            <div class="col-xs-4 number-stats">
+                <div id="border"></div>
+                <p id="n3">30%</p> din alimente sunt irosite.
+            </div>
+        </div>
+        <div class="row landing-buttons" style="text-align: center">
+            {% if app.user %}
+                <span class="landing-btn"><a style="text-decoration: none;" class="landing-href-first" href="{{ path('donate') }}">Doneaz&#259</a></span>
+                <span class="landing-btn-filled"><a style="text-decoration: none;" class="landing-href-second" href="{{ path('order') }}">Comand&#259</a></span>
+            {% else %}
+                <span class="landing-btn"><a style="text-decoration: none;" class="landing-href-first" href="{{ path('login') }}">Logare</a></span>
+                <span class="landing-btn-filled"><a style="text-decoration: none;" class="landing-href-second" href="{{ path('register') }}">Inregistrare</a></span>
+            {% endif %}
         </div>
     </div>
 </div>

@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container">
+<div class="container main-content">
     <!-- Example row of columns -->
     <div class="row">
         <div class="col-md-12">
@@ -9,7 +9,7 @@
             {{ form_start(form) }}
             <div class="form_group">
                 <div class="col-md-12">
-                    {{ form_row(form.name, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_row(form.name, {'label': 'Nume utilizator', 'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
             <div class="form_group">
@@ -19,18 +19,18 @@
             </div>
             <div class="form_group">
                 <div class="col-md-12">
-                    {{ form_row(form.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_row(form.plainPassword.first, {'label': 'Parolă', 'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
             <div class="form_group">
                 <div class="col-md-12">
-                    {{ form_row(form.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_row(form.plainPassword.second, {'label': 'Repetă parolă', 'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-8" style="margin-top:5px;">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-btn fa-user"></i> Register
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-btn fa-user"></i> &#206;nregistrare
                     </button>
                 </div>
             </div>

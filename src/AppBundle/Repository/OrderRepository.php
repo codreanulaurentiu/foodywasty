@@ -53,4 +53,43 @@ class OrderRepository extends EntityRepository
             ->setParameter('user', $user)
             ->getQuery()->getResult();
     }
+
+    public function getOrderQuantitiesByCategory(User $user)
+    {
+        $result = $this->createQueryBuilder('o')
+            ->select('c.name, SUM(o.quantity)')
+            ->innerJoin('AppBundle\Entity\Category', 'c', 'WITH', 'o.category = c.id')
+            ->where('o.type = 1')
+            ->andWhere('o.user = :user')
+            ->groupBy('o.category')
+            ->setParameter('user', $user)
+            ->getQuery()->getArrayResult();
+
+        $resultFormat = [];
+        $resultFormat[] = ['Categorie', 'Cantitate'];
+
+        foreach ($result as $resultItem) {
+            $resultFormat[] = [$resultItem['name'], (float)$resultItem['1']];
+        }
+        return $resultFormat;
+    }
+
+    public function getOrderQuantitiesByDay(User $user)
+    {
+        $result = $this->createQueryBuilder('o')
+            ->select('o.pickUpDate, SUM(o.quantity)')
+            ->where('o.type = 1')
+            ->andWhere('o.user = :user')
+            ->groupBy('o.pickUpDate')
+            ->setParameter('user', $user)
+            ->getQuery()->getArrayResult();
+
+        $resultFormat = [];
+        $resultFormat[] = ['Data', 'Cantitate'];
+
+        foreach ($result as $resultItem) {
+            $resultFormat[] = [$resultItem['pickUpDate']->format('d-M-Y'), (float)$resultItem['1']];
+        }
+        return $resultFormat;
+    }
 }

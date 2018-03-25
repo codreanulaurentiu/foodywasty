@@ -208,8 +208,7 @@ class OrderController extends Controller
     public function listOrders(Request $request)
     {
         /** @var OrderRepository $repo */
-        $repo = $this->getDoctrine()->getManager()->getRepository(Order::class);
-
+        $orderRepository = $this->getDoctrine()->getManager()->getRepository(Order::class);
         /** @var TokenStorage $storage */
         $storage = $this->get('security.token_storage');
         if (!$storage->getToken()->isAuthenticated()) {
@@ -218,10 +217,14 @@ class OrderController extends Controller
 
         /** @var User $user */
         $user = $storage->getToken()->getUser();
+        $mostWastedCategories = $orderRepository->getOrderQuantitiesByCategory($user);
+        $mostWastedDays = $orderRepository->getOrderQuantitiesByDay($user);
 
         return $this->render('default/orderListing.html.twig', [
-            'past_orders' => $repo->getPastOrders($user),
-            'upcoming_orders' => $repo->getUpcomingOrders($user),
+            'past_orders' => $orderRepository->getPastOrders($user),
+            'upcoming_orders' => $orderRepository->getUpcomingOrders($user),
+            'mostWastedCategories' => json_encode($mostWastedCategories),
+            'mostWastedDays' => json_encode($mostWastedDays),
         ]);
     }
 

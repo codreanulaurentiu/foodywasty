@@ -7,14 +7,11 @@
         <div class="col-md-12">
             <h1 class="title">Doneaz&#259;<i class="fas fa-leaf order-type"></i></h1>
             <p>Click <a href="{{ path("find") }}">aici</a> pentru a g&#259;si centre de dona&#539;ie aproape de tine.</p>
-
-
             {{ form_start(form) }}
                 {{ form_row(form.type, {'attr': {'class': 'form-control'}}) }}
                 {{ form_row(form.category, {'attr': {'class': 'form-control'}}) }}
                 {{ form_row(form.quantity, {'attr': {'class': 'form-control'}}) }}
                 {{ form_row(form.address, {'attr': {'class': 'form-control'}}) }}
-                {{ form_row(form.phone, {'attr': {'class': 'form-control'}}) }}
                 {{ form_row(form.pickUpDate, {'attr': {'class': 'form-control hidden'}}) }}
                 <div id="v-cal">
                     <div class="vcal-header">

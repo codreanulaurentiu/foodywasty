@@ -27,10 +27,7 @@ class OrderType extends AbstractType
                 'label' => 'Cantitate (Kg.)'
             ])
             ->add('address', TextType::class, [
-                'label' => 'Adresa'
-            ])
-            ->add('phone', TextType::class, [
-                'label' => 'Telefon'
+                'label' => 'Adresă'
             ])
             ->add('type', ChoiceType::class,
                 [
