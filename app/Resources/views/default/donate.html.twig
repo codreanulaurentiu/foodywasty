@@ -1,17 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container">
+<div class="container main-content">
     <!-- Example row of columns -->
     <div class="row">
         <div class="col-md-12">
             <h1 class="title">Doneaz&#259;<i class="fas fa-leaf order-type"></i></h1>
-            <div class="nepis">
-                <h3 data-toggle="collapse" data-target="#info">Informa&#539;ii suplimentare</h3>
-                <div id="info" class="collapse">
-                    sadasddddddd dasd as das dasd asudahs duas dasd uasjd ias doas iaosf aisa.
-                </div>
-            </div>
+            <p>Click <a href="{{ path("find") }}">aici</a> pentru a g&#259;si centre de dona&#539;ie aproape de tine.</p>
+
 
             {{ form_start(form) }}
                 {{ form_row(form.type, {'attr': {'class': 'form-control'}}) }}
@@ -48,12 +44,6 @@
             {{ form_end(form) }}
         </div>
     </div>
-
-    <hr>
-
-    <footer>
-        <p>&copy; Company 2015</p>
-    </footer>
 </div> <!-- /container -->
 
 {% endblock %}

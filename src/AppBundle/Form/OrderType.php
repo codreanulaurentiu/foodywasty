@@ -26,14 +26,19 @@ class OrderType extends AbstractType
             ->add('quantity', NumberType::class, [
                 'label' => 'Cantitate (Kg.)'
             ])
-            ->add('address', TextType::class)
-            ->add('phone', TextType::class)
+            ->add('address', TextType::class, [
+                'label' => 'Adresa'
+            ])
+            ->add('phone', TextType::class, [
+                'label' => 'Telefon'
+            ])
             ->add('type', ChoiceType::class,
                 [
                     'choices' => [
                         'Consumabile' => Order::TYPE_REQUEST_FOOD,
                         'Deseuri' => Order::TYPE_REQUEST_WASTE,
-                    ]
+                    ],
+                    'label' => 'Tip'
                 ]
             )
             ->add('pickUpDate', DateType::class, [
@@ -42,7 +47,8 @@ class OrderType extends AbstractType
             ->add('category', EntityType::class,
                 [
                     'class' => Category::class,
-                    'choice_label' => 'name'
+                    'choice_label' => 'name',
+                    'label' => 'Categorie'
                 ]);
     }
 }

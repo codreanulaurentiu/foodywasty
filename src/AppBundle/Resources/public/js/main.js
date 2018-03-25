@@ -17,7 +17,7 @@ $('#donate_quantity').on('input', function() {
     }
 });
 
-$('#type').on('change', function() {
+$('#order_type, #donate_type').on('change', function() {
     $('.order-type').toggleClass('fa-leaf fa-recycle');
 });
 

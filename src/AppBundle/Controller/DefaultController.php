@@ -109,4 +109,13 @@ class DefaultController extends Controller
     public function logoutAction()
     {
     }
+    /**
+     * @Route("/find", name="find")
+     */
+    public function finOnMapAction()
+    {
+        return $this->render(
+            'default/find.html.twig'
+        );
+    }
 }

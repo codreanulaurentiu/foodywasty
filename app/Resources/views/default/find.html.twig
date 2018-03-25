@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container main-content">
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="title">Hart&#259;</h1>
+            <div id="map"></div>
+        </div>
+    </div>
+</div> <!-- /container -->
+
+{% endblock %}
+
+{% block bottom_scripts %}
+<script src="{{ asset('bundles/app/js/vendor/jquery-1.11.2.min.js') }}"></script>
+<script src="{{ asset('bundles/app/js/vendor/bootstrap.js') }}"></script>
+<script src="{{ asset('bundles/app/js/main.js') }}"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgN3CrnkF1bN9CIL7noVvghEcnzGD4nyM&callback=initMap"></script>
+<script>
+    function initMap() {
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15
+        });
+
+        var buc = {lat: 44.439663, lng: 26.096306};
+        var m1 = {lat: 44.441041, lng: 26.053591};
+        var m2 = {lat: 44.434514, lng: 26.052175};
+        var m3 = {lat: 44.439340, lng: 26.042798};
+
+        var marker = new google.maps.Marker({
+            position: m1,
+            map: map,
+            title: "Centru de batrani"
+        });
+        var marker2 = new google.maps.Marker({
+            position: m2,
+            map: map,
+            title: "Campus studentesc"
+        });
+        var marker3 = new google.maps.Marker({
+            position: m3,
+            map: map,
+            title: "Ajutoare"
+        });
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                map.setCenter(initialLocation);
+            });
+        }
+        else {
+            map.setCenter(buc);
+        }
+    }
+</script>
+{% endblock %}

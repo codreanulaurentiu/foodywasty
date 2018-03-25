@@ -3,18 +3,55 @@
 {% block body %}
     <div class="container">
 
-        <h2>Comenzi care vin</h2>
-        {% for order in upcoming_orders %}
-            <h3>Data: {{ order.pickUpDate.format('d-M-Y ') }}</h3>
-            <h3>Categorie: {{ order.category.name }}</h3>
-            <hr>
-        {% endfor %}
+    <div class="container main-content">
+        <!-- Example row of columns -->
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="title">Comenzi viitoare</h1>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Categorie</th>
+                        <th scope="col">Cantitate</th>
+                        <th scope="col">Dat&#259; livrare</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in upcoming_orders %}
+                        <tr>
+                            <td>{{ order.category.name }}</td>
+                            <td>{{ order.quantity }}</td>
+                            <td>{{ order.pickUpDate.format('d-M-Y ') }}</td>
 
-        <h2>Comenzi care o trecut</h2>
-        {% for order in past_orders %}
-            <h3>Data: {{ order.pickUpDate.format('d-M-Y ') }}</h3>
-            <h3>Categorie: {{ order.category.name }}</h3>
-            <hr>
-        {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="title">Comenzi trecute</h1>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Categorie</th>
+                        <th scope="col">Cantitate</th>
+                        <th scope="col">Dat&#259; livrare</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in past_orders %}
+                        <tr>
+                            <td>{{ order.category.name }}</td>
+                            <td>{{ order.quantity }}</td>
+                            <td>{{ order.pickUpDate.format('d-M-Y ') }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}

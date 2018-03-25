@@ -26,14 +26,19 @@ class DonateType extends AbstractType
             ->add('quantity', NumberType::class, [
                 'label' => 'Cantitate (Kg.)'
             ])
-            ->add('address', TextType::class)
-            ->add('phone', TextType::class)
+            ->add('address', TextType::class, [
+                'label' => 'Adresa'
+            ])
+            ->add('phone', TextType::class, [
+                'label' => 'Telefon'
+            ])
             ->add('type', ChoiceType::class,
                 [
                     'choices' => [
                         'Consumabile' => Order::TYPE_ADD_FOOD,
                         'Deseuri' => Order::TYPE_ADD_WASTE,
-                    ]
+                    ],
+                    'label' => 'Tip'
                 ]
             )
             ->add('pickUpDate', DateType::class, [
@@ -42,7 +47,8 @@ class DonateType extends AbstractType
             ->add('category', EntityType::class,
                 [
                     'class' => Category::class,
-                    'choice_label' => 'name'
+                    'choice_label' => 'name',
+                    'label' => 'Categorie'
                 ]);
     }
 }
