@@ -1,19 +1,29 @@
 {% extends 'base.html.twig' %}
-
 {% block body %}
-    <div class="container">
+<div class="container">
+    <div class="container presentation">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="panel panel-success">
-                    <div class="panel-heading">List of Game of Thrones Characters</div>
-                    {% if app.user != null %}
-                        <h1>{{ app.user.username }}</h1>
-                    {% endif %}
-                </div>
-                {% if app.user == null %}
-                    <a href="/login" class="btn btn-info"> You need to login to see the list  >></a>
-                {% endif %}
-            </div>
+            <div class="col-md-4"><span id="n1">123</span></div>
+            <div class="col-md-4"><span id="n2">21241241</span></div>
+            <div class="col-md-4"><span id="n3">23121231231231</span></div>
         </div>
     </div>
+</div>
+{% endblock %}
+
+{% block bottom_scripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/app/js/vendor/countUp.min.js') }}"></script>
+
+    <script>
+        var options = {
+            useEasing: true,
+            useGrouping: true,
+            separator: ',',
+            decimal: '.',
+        };
+        new CountUp('n1', 0, $('#n1').text(), 0, 2.5, options).start();
+        new CountUp('n2', 0, $('#n2').text(), 0, 2.5, options).start();
+        new CountUp('n3', 0, $('#n3').text(), 0, 2.5, options).start();
+    </script>
 {% endblock %}

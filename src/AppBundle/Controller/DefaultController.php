@@ -44,6 +44,9 @@ class DefaultController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
+
+            $this->addFlash('success', 'Inregistrare cu succes.');
+
             return $this->redirectToRoute('login');
         }
         return $this->render('default/register.html.twig', [

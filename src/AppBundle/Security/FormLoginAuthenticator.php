@@ -3,6 +3,7 @@ namespace AppBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
@@ -16,10 +17,15 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 {
     private $router;
     private $encoder;
-    public function __construct(RouterInterface $router, UserPasswordEncoderInterface $encoder)
+
+    /** @var  Session */
+    private $session;
+
+    public function __construct(RouterInterface $router, UserPasswordEncoderInterface $encoder, Session $session)
     {
         $this->router = $router;
         $this->encoder = $encoder;
+        $this->session = $session;
     }
     public function getCredentials(Request $request)
     {
@@ -49,11 +55,15 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
     }
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+        $this->session->getFlashBag()->add('success', 'Autentificare cu succes.');
+
         $url = $this->router->generate('homepage');
         return new RedirectResponse($url);
     }
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        $this->session->getFlashBag()->add('error', 'User sau parola gresite.');
+
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
         $url = $this->router->generate('login');
         return new RedirectResponse($url);

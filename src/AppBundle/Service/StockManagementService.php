@@ -46,7 +46,8 @@ class StockManagementService
         if (!in_array($order->getType(), [Order::TYPE_REQUEST_FOOD, Order::TYPE_REQUEST_WASTE])) {
             throw new \Exception('Nu am putut genera o comanda cu datele cerute.');
         }
-        $type = $order->getType() === Order::TYPE_REQUEST_FOOD
+
+        $type = $order->getType() == Order::TYPE_REQUEST_FOOD
             ? Order::TYPE_ADD_FOOD
             : Order::TYPE_ADD_WASTE;
 
@@ -57,19 +58,21 @@ class StockManagementService
 
         /** @var Stock $stock */
         foreach ($stocks as $stock) {
+            $currentStock = $stock->getRemainingQuantity();
+            $stock->setRemainingQuantity($currentStock - min($remaining, $currentStock));
+            $remaining -= min($remaining, $currentStock);
+
             if ($remaining <= 0) {
                 $this->entityManager->flush();
                 return;
             }
-
-            $currentStock = $stock->getRemainingQuantity();
-            $stock->setRemainingQuantity($currentStock - min($remaining, $currentStock));
-            $remaining -= min($remaining, $currentStock);
         }
+
+        var_dump('asassda');die;
     }
 
 
-    public function checkStock(int $quantity, int $type)
+    public function checkStock(float $quantity, int $type)
     {
         /** @var StockRepository $repo */
         $repo = $this->entityManager->getRepository(Stock::class);
@@ -77,13 +80,17 @@ class StockManagementService
         $stocks = $repo->getAllAvailableStocks($type);
 
         $partialStock = 0;
-        $currentDate = $stocks[0]->getAvailabilityDate();
+        try {
+            $currentDate = $stocks->current()->getAvailabilityDate();
+        } catch (\Exception $e) {
+            dump($e);
+            return null;
+        }
 
         /** @var Stock $stock */
         foreach ($stocks as $stock) {
             $currentDate = $stock->getAvailabilityDate();
             $partialStock += $stock->getRemainingQuantity();
-
             if ($partialStock >= $quantity) {
                 return $currentDate < (new \DateTime()) ? new \DateTime() :  $currentDate;
             }

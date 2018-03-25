@@ -18,7 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class OrderType extends AbstractType
+class DonateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -31,8 +31,8 @@ class OrderType extends AbstractType
             ->add('type', ChoiceType::class,
                 [
                     'choices' => [
-                        'Consumabile' => Order::TYPE_REQUEST_FOOD,
-                        'Deseuri' => Order::TYPE_REQUEST_WASTE,
+                        'Consumabile' => Order::TYPE_ADD_FOOD,
+                        'Deseuri' => Order::TYPE_ADD_WASTE,
                     ]
                 ]
             )

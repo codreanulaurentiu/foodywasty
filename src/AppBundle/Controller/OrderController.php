@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Order;
 use AppBundle\Entity\User;
+use AppBundle\Form\DonateType;
 use AppBundle\Form\OrderType;
 use AppBundle\Repository\OrderRepository;
 use AppBundle\Service\MailService;
@@ -23,6 +24,47 @@ class OrderController extends Controller
      */
     public function addOrderAction(Request $request)
     {
+//        /** @var TokenStorage $storage */
+//        $storage = $this->get('security.token_storage');
+//        if (!$storage->getToken()->isAuthenticated()) {
+//            throw new UnauthorizedHttpException('ax');
+//        }
+//
+//        /** @var User $user */
+//        $user = $storage->getToken()->getUser();
+//
+//        /** @var Order $order */
+//        $order = new Order();
+//
+//        /** @var StockManagementService $service */
+//        $service = $this->get('stock.management.service');
+//        $form    = $this->createForm(OrderType::class, $order);
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $order->setUser($user);
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($order);
+//            $em->flush();
+//            if (in_array($order->getType(), [Order::TYPE_ADD_FOOD, Order::TYPE_ADD_WASTE])) {
+//                $service->addStock($order);
+//            } else if (in_array($order->getType(), [Order::TYPE_REQUEST_FOOD, Order::TYPE_REQUEST_WASTE])) {
+//                $service->subtractStock($order);
+//            }
+//        }
+//
+//        return $this->render('default/addOrder.html.twig', [
+//            'form' => $form->createView(),
+//        ]);
+    }
+
+    /**
+     * @Route(name="donate", path="/donate")
+     */
+    public function donateAction(Request $request)
+    {
+        $form    = $this->createForm(DonateType::class);
+
         /** @var TokenStorage $storage */
         $storage = $this->get('security.token_storage');
         if (!$storage->getToken()->isAuthenticated()) {
@@ -37,11 +79,18 @@ class OrderController extends Controller
 
         /** @var StockManagementService $service */
         $service = $this->get('stock.management.service');
-        $form    = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $order = new Order();
+
+            $data = $form->getData();
+
+            $order->setQuantity($data['quantity']);
+            $order->setType($data['type']);
+            $order->setCategory($data['category']);
+            $order->setPickUpDate($data['pickUpDate']);
             $order->setUser($user);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($order);
             $em->flush();
@@ -50,13 +99,68 @@ class OrderController extends Controller
             } else if (in_array($order->getType(), [Order::TYPE_REQUEST_FOOD, Order::TYPE_REQUEST_WASTE])) {
                 $service->subtractStock($order);
             }
+
+            $this->addFlash('success', 'Donatie plasata cu succes!');
+
+            return $this->redirect('orders');
         }
 
-        return $this->render('default/addOrder.html.twig', [
-            'form' => $form->createView(),
+        return $this->render('default/donate.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 
+    /**
+     * @Route(name="order", path="/order")
+     */
+    public function orderAction(Request $request)
+    {
+        $form    = $this->createForm(OrderType::class);
+
+        /** @var TokenStorage $storage */
+        $storage = $this->get('security.token_storage');
+        if (!$storage->getToken()->isAuthenticated()) {
+            throw new UnauthorizedHttpException('ax');
+        }
+
+        /** @var User $user */
+        $user = $storage->getToken()->getUser();
+
+        /** @var Order $order */
+        $order = new Order();
+
+        /** @var StockManagementService $service */
+        $service = $this->get('stock.management.service');
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $order = new Order();
+
+            $data = $form->getData();
+
+            $order->setQuantity($data['quantity']);
+            $order->setType($data['type']);
+            $order->setCategory($data['category']);
+            $order->setPickUpDate($data['pickUpDate']);
+            $order->setUser($user);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($order);
+            $em->flush();
+
+            if (in_array($order->getType(), [Order::TYPE_ADD_FOOD, Order::TYPE_ADD_WASTE])) {
+                $service->addStock($order);
+            } else if (in_array($order->getType(), [Order::TYPE_REQUEST_FOOD, Order::TYPE_REQUEST_WASTE])) {
+                $service->subtractStock($order);
+            }
+            $this->addFlash('success', 'Comanda plasata cu succes!');
+
+            return $this->redirect('orders');
+        }
+
+        return $this->render('default/order.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
     /**
      * @Route(name="check_availability", path="/check_availability")
      */
@@ -67,19 +171,20 @@ class OrderController extends Controller
         if (!$storage->getToken()->isAuthenticated()) {
             throw new UnauthorizedHttpException('Nu aveti permisiuni sa accesati acest url!');
         }
-        $type = $request->request->get('type');
-        if (!in_array($type, [Order::TYPE_REQUEST_FOOD, Order::TYPE_REQUEST_WASTE]) || empty($request->request->get('quantity'))) {
+        $type = $request->query->get('type');
+        if (!in_array($type, [Order::TYPE_REQUEST_FOOD, Order::TYPE_REQUEST_WASTE]) || empty($request->query->get('quantity'))) {
             return new JsonResponse('Nu am putut genera o comanda cu datele cerute.');
         }
 
-        $type = $type === Order::TYPE_REQUEST_FOOD
+        $type = $type == Order::TYPE_REQUEST_FOOD
             ? Order::TYPE_ADD_FOOD
             : Order::TYPE_ADD_WASTE;
         $stockManagementService = $this->get('stock.management.service');
-        $response = $stockManagementService->checkStock($request->request->get('quantity'), $type);
-        return empty($response)
+        $response = $stockManagementService->checkStock($request->query->get('quantity'), $type);
+
+        return !empty($response)
             ? new JsonResponse($response)
-            : new JsonResponse('Nu am gasit stock pentru datele cerute.');
+            : new JsonResponse(['error' => 'Nu am gasit stock pentru datele cerute.']);
     }
 
     /**

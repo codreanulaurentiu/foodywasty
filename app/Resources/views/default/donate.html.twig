@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="title">Doneaz&#259;<i class="fas fa-leaf order-type"></i></h1>
+            <div class="nepis">
+                <h3 data-toggle="collapse" data-target="#info">Informa&#539;ii suplimentare</h3>
+                <div id="info" class="collapse">
+                    sadasddddddd dasd as das dasd asudahs duas dasd uasjd ias doas iaosf aisa.
+                </div>
+            </div>
+
+            {{ form_start(form) }}
+                {{ form_row(form.type, {'attr': {'class': 'form-control'}}) }}
+                {{ form_row(form.category, {'attr': {'class': 'form-control'}}) }}
+                {{ form_row(form.quantity, {'attr': {'class': 'form-control'}}) }}
+                {{ form_row(form.address, {'attr': {'class': 'form-control'}}) }}
+                {{ form_row(form.phone, {'attr': {'class': 'form-control'}}) }}
+                {{ form_row(form.pickUpDate, {'attr': {'class': 'form-control hidden'}}) }}
+                <div id="v-cal">
+                    <div class="vcal-header">
+                        <a class="vcal-btn" data-calendar-toggle="previous">
+                            <svg height="24" version="1.1" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path>
+                            </svg>
+                        </a>
+
+                        <div class="vcal-header__label" data-calendar-label="month">
+                            March 2017
+                        </div>
+
+                        <a class="vcal-btn" data-calendar-toggle="next">
+                            <svg height="24" version="1.1" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"></path>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <div class="vcal-week">
+                        <span>Mon</span> <span>Tue</span><span>Wed</span> <span>Thu</span> <span>Fri</span> <span>Sat</span> <span>Sun</span>
+                    </div>
+                    <div class="vcal-body" data-calendar-area="month"></div>
+                </div>
+                <button id="send-donation" class="btn btn-success order" disabled="true">Trimite</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <hr>
+
+    <footer>
+        <p>&copy; Company 2015</p>
+    </footer>
+</div> <!-- /container -->
+
+{% endblock %}
+
+{% block bottom_scripts %}
+<script src="{{ asset('bundles/app/js/vendor/jquery-1.11.2.min.js') }}"></script>
+<script src="{{ asset('bundles/app/js/vendor/bootstrap.js') }}"></script>
+<script src="{{ asset('bundles/app/js/main.js') }}"></script>
+<script src="{{ asset('bundles/app/js/vendor/vanillaCalendar.js') }}"></script>
+
+<script>
+    window.addEventListener('load', function () {
+        vanillaCalendar.init({disablePastDays : true}, new Date());
+    })
+</script>
+{% endblock %}
